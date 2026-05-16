@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ZK vs Ultra AI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+    radial-gradient(circle at top left,#00c6ff22,#000),
+    radial-gradient(circle at bottom right,#ff00ff22,#000),
+    #050816;
+    overflow:hidden;
+    color:white;
+}
+
+.container{
+    width:500px;
+    padding:30px;
+    border-radius:30px;
+    background:rgba(255,255,255,0.07);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 20px 40px rgba(0,0,0,0.6);
+    text-align:center;
+}
+
+h1{
+    font-size:40px;
+    font-weight:700;
+    margin-bottom:8px;
+
+    background:linear-gradient(
+        to right,
+        #00e5ff,
+        #ff00d4
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+    color:#bbbbbb;
+    margin-bottom:25px;
+}
+
+/* STATUS */
+
+.status{
+    padding:15px;
+    border-radius:15px;
+    background:rgba(255,255,255,0.08);
+    margin-bottom:20px;
+    font-size:22px;
+    font-weight:600;
+}
+
+/* TOP */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+/* SELECT */
+
+select{
+    padding:12px 18px;
+    border:none;
+    border-radius:14px;
+    outline:none;
+    color:white;
+    font-weight:600;
+    font-size:15px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #00c6ff,
+        #0072ff
+    );
+
+    box-shadow:
+    0 8px 20px rgba(0,114,255,0.4);
+
+    cursor:pointer;
+}
+
+select option{
+    background:#0f172a;
+}
+
+/* SCOREBOARD */
+
+.scoreboard{
+    display:flex;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.score{
+    flex:1;
+    padding:15px;
+    border-radius:18px;
+    background:rgba(255,255,255,0.08);
+    transition:0.3s;
+}
+
+.score:hover{
+    transform:translateY(-5px);
+}
+
+.score h2{
+    font-size:18px;
+    margin-bottom:5px;
+}
+
+.score p{
+    font-size:30px;
+    font-weight:700;
+}
+
+.user{
+    border-bottom:4px solid #00e5ff;
+}
+
+.draw{
+    border-bottom:4px solid #ffcc00;
+}
+
+.ai{
+    border-bottom:4px solid #ff00d4;
+}
+
+/* BOARD */
+
+.board{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    position:relative;
+}
+
+.cell{
+    height:130px;
+    border-radius:25px;
+
+    background:
+    rgba(255,255,255,0.08);
+
+    border:
+    1px solid rgba(255,255,255,0.08);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:65px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:0.25s;
+}
+
+.cell:hover{
+    transform:scale(1.05);
+    background:rgba(255,255,255,0.13);
+}
+
+.x{
+    color:#00e5ff;
+    text-shadow:0 0 15px #00e5ff;
+}
+
+.o{
+    color:#ff00d4;
+    text-shadow:0 0 15px #ff00d4;
+}
+
+/* WIN LINE */
+
+#line{
+    position:absolute;
+    height:6px;
+    background:white;
+    border-radius:20px;
+    display:none;
+    z-index:100;
+    box-shadow:0 0 15px white;
+    transform-origin:left center;
+}
+
+/* BUTTONS */
+
+.buttons{
+    display:flex;
+    gap:12px;
+    margin-top:25px;
+}
+
+button{
+    flex:1;
+    padding:14px;
+    border:none;
+    border-radius:16px;
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.restart-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #7b2ff7,
+        #f107a3
+    );
+
+    box-shadow:
+    0 8px 20px rgba(241,7,163,0.4);
+}
+
+.reset-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff512f,
+        #dd2476
+    );
+
+    box-shadow:
+    0 8px 20px rgba(255,80,80,0.4);
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+.footer{
+    margin-top:18px;
+    color:#999;
+    font-size:13px;
+}
+
+@media(max-width:600px){
+
+    .container{
+        width:95%;
+    }
+
+    .cell{
+        height:100px;
+        font-size:50px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>ZK vs AI</h1>
+
+<div class="subtitle">
+⚡ Ultra Instinct Tic Tac Toe
+</div>
+
+<div class="topbar">
+
+<select id="difficulty">
+
+<option value="easy">🟢 Easy</option>
+
+<option value="medium">🟡 Medium</option>
+
+<option value="hard">🔴 Hard</option>
+
+<option value="insane">⚫ Ultra Instinct</option>
+
+</select>
+
+</div>
+
+<div class="status" id="status">
+🔥 ZK Turn
+</div>
+
+<div class="scoreboard">
+
+<div class="score user">
+
+<h2>ZK</h2>
+
+<p id="userScore">0</p>
+
+</div>
+
+<div class="score draw">
+
+<h2>Draw</h2>
+
+<p id="drawScore">0</p>
+
+</div>
+
+<div class="score ai">
+
+<h2>AI</h2>
+
+<p id="aiScore">0</p>
+
+</div>
+
+</div>
+
+<div class="board">
+
+<div id="line"></div>
+
+<div class="cell" data-index="0"></div>
+<div class="cell" data-index="1"></div>
+<div class="cell" data-index="2"></div>
+
+<div class="cell" data-index="3"></div>
+<div class="cell" data-index="4"></div>
+<div class="cell" data-index="5"></div>
+
+<div class="cell" data-index="6"></div>
+<div class="cell" data-index="7"></div>
+<div class="cell" data-index="8"></div>
+
+</div>
+
+<div class="buttons">
+
+<button class="restart-btn"
+onclick="restartGame()">
+🔄 Restart
+</button>
+
+<button class="reset-btn"
+onclick="fullReset()">
+🧹 Full Reset
+</button>
+
+</div>
+
+<div class="footer">
+Made with ❤️ by ZK
+</div>
+
+</div>
+
+<script>
+
+const cells =
+document.querySelectorAll(".cell");
+
+const statusText =
+document.getElementById("status");
+
+const line =
+document.getElementById("line");
+
+let board =
+["","","","","","","","",""];
+
+let gameActive = true;
+
+let userScore = 0;
+let aiScore = 0;
+let drawScore = 0;
+
+const wins = [
+
+[0,1,2],
+[3,4,5],
+[6,7,8],
+
+[0,3,6],
+[1,4,7],
+[2,5,8],
+
+[0,4,8],
+[2,4,6]
+
+];
+
+const lineStyles = [
+
+"top:62px; left:10px; width:410px;",
+"top:206px; left:10px; width:410px;",
+"top:348px; left:10px; width:410px;",
+
+"top:10px; left:65px; width:410px; transform:rotate(90deg);",
+"top:10px; left:205px; width:410px; transform:rotate(90deg);",
+"top:10px; left:345px; width:410px; transform:rotate(90deg);",
+
+"top:60px; left:20px; width:540px; transform:rotate(45deg);",
+"top:60px; left:-100px; width:540px; transform:rotate(-45deg);"
+
+];
+
+cells.forEach(cell=>{
+
+    cell.addEventListener(
+        "click",
+        playerMove
+    );
+
+});
+
+function playerMove(e){
+
+    const index =
+    e.target.dataset.index;
+
+    if(
+        board[index] !== ""
+        || !gameActive
+    ){
+        return;
+    }
+
+    move(index,"X");
+
+    if(checkWinner("X")){
+
+        endGame(
+            "🏆 ZK Wins!",
+            "user"
+        );
+
+        return;
+    }
+
+    if(isDraw()){
+
+        drawGame();
+        return;
+    }
+
+    statusText.innerHTML =
+    "🤖 AI Thinking...";
+
+    setTimeout(aiMove,500);
+}
+
+function aiMove(){
+
+    const level =
+    document.getElementById(
+        "difficulty"
+    ).value;
+
+    let moveIndex;
+
+    if(level === "easy"){
+
+        moveIndex = randomMove();
+
+    }
+    else if(level === "medium"){
+
+        if(Math.random() < 0.5){
+
+            moveIndex = randomMove();
+
+        }else{
+
+            moveIndex = bestMove();
+        }
+
+    }
+    else if(level === "hard"){
+
+        moveIndex = bestMove();
+
+    }
+    else if(level === "insane"){
+
+        moveIndex =
+        ultraInstinctMove();
+    }
+
+    move(moveIndex,"O");
+
+    if(checkWinner("O")){
+
+        endGame(
+            "☠️ AI Wins!",
+            "ai"
+        );
+
+        return;
+    }
+
+    if(isDraw()){
+
+        drawGame();
+        return;
+    }
+
+    statusText.innerHTML =
+    "🔥 ZK Turn";
+}
+
+function move(index,player){
+
+    board[index] = player;
+
+    cells[index].innerHTML =
+    player;
+
+    if(player === "X"){
+
+        cells[index]
+        .classList.add("x");
+
+    }else{
+
+        cells[index]
+        .classList.add("o");
+    }
+}
+
+function randomMove(){
+
+    let empty = [];
+
+    board.forEach((cell,index)=>{
+
+        if(cell === ""){
+
+            empty.push(index);
+        }
+
+    });
+
+    return empty[
+        Math.floor(
+            Math.random()
+            * empty.length
+        )
+    ];
+}
+
+function bestMove(){
+
+    let bestScore = -Infinity;
+    let move;
+
+    for(let i=0;i<9;i++){
+
+        if(board[i] === ""){
+
+            board[i] = "O";
+
+            let score =
+            minimax(board,0,false);
+
+            board[i] = "";
+
+            if(score > bestScore){
+
+                bestScore = score;
+                move = i;
+            }
+        }
+    }
+
+    return move;
+}
+
+function minimax(board,depth,isMax){
+
+    if(check("O")) return 10-depth;
+    if(check("X")) return depth-10;
+    if(full()) return 0;
+
+    if(isMax){
+
+        let best = -Infinity;
+
+        for(let i=0;i<9;i++){
+
+            if(board[i] === ""){
+
+                board[i] = "O";
+
+                best = Math.max(
+                    best,
+                    minimax(
+                        board,
+                        depth+1,
+                        false
+                    )
+                );
+
+                board[i] = "";
+            }
+        }
+
+        return best;
+
+    }else{
+
+        let best = Infinity;
+
+        for(let i=0;i<9;i++){
+
+            if(board[i] === ""){
+
+                board[i] = "X";
+
+                best = Math.min(
+                    best,
+                    minimax(
+                        board,
+                        depth+1,
+                        true
+                    )
+                );
+
+                board[i] = "";
+            }
+        }
+
+        return best;
+    }
+}
+
+function ultraInstinctMove(){
+
+    if(board.filter(
+        x=>x !== ""
+    ).length === 1){
+
+        if(board[4] === ""){
+            return 4;
+        }
+
+        const corners =
+        [0,2,6,8]
+        .filter(i=>board[i] === "");
+
+        if(corners.length > 0){
+
+            return corners[
+                Math.floor(
+                    Math.random()
+                    * corners.length
+                )
+            ];
+        }
+    }
+
+    for(let i=0;i<9;i++){
+
+        if(board[i] === ""){
+
+            board[i] = "O";
+
+            if(check("O")){
+
+                board[i] = "";
+                return i;
+            }
+
+            board[i] = "";
+        }
+    }
+
+    for(let i=0;i<9;i++){
+
+        if(board[i] === ""){
+
+            board[i] = "X";
+
+            if(check("X")){
+
+                board[i] = "";
+                return i;
+            }
+
+            board[i] = "";
+        }
+    }
+
+    if(board[4] === ""){
+        return 4;
+    }
+
+    const corners =
+    [0,2,6,8]
+    .filter(i=>board[i] === "");
+
+    if(corners.length > 0){
+
+        return corners[
+            Math.floor(
+                Math.random()
+                * corners.length
+            )
+        ];
+    }
+
+    return bestMove();
+}
+
+function check(player){
+
+    return wins.some(pattern=>{
+
+        return pattern.every(index=>
+            board[index] === player
+        );
+
+    });
+}
+
+function checkWinner(player){
+
+    for(let i=0;i<wins.length;i++){
+
+        const pattern = wins[i];
+
+        if(pattern.every(index=>
+            board[index] === player
+        )){
+
+            line.style.display =
+            "block";
+
+            line.style.cssText +=
+            lineStyles[i];
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function full(){
+    return !board.includes("");
+}
+
+function isDraw(){
+    return full();
+}
+
+function endGame(message,winner){
+
+    gameActive = false;
+
+    statusText.innerHTML =
+    message;
+
+    if(winner === "user"){
+
+        userScore++;
+
+        document.getElementById(
+            "userScore"
+        ).innerHTML = userScore;
+
+    }else{
+
+        aiScore++;
+
+        document.getElementById(
+            "aiScore"
+        ).innerHTML = aiScore;
+    }
+
+    setTimeout(()=>{
+        restartGame();
+    },2500);
+}
+
+function drawGame(){
+
+    gameActive = false;
+
+    drawScore++;
+
+    document.getElementById(
+        "drawScore"
+    ).innerHTML = drawScore;
+
+    statusText.innerHTML =
+    "🤝 Draw Match";
+
+    setTimeout(()=>{
+        restartGame();
+    },2500);
+}
+
+function restartGame(){
+
+    board =
+    ["","","","","","","","",""];
+
+    gameActive = true;
+
+    line.style.display = "none";
+    line.style.cssText = "";
+
+    cells.forEach(cell=>{
+
+        cell.innerHTML = "";
+
+        cell.classList.remove("x");
+        cell.classList.remove("o");
+
+    });
+
+    statusText.innerHTML =
+    "🔥 ZK Turn";
+}
+
+function fullReset(){
+
+    restartGame();
+
+    userScore = 0;
+    aiScore = 0;
+    drawScore = 0;
+
+    document.getElementById(
+        "userScore"
+    ).innerHTML = 0;
+
+    document.getElementById(
+        "aiScore"
+    ).innerHTML = 0;
+
+    document.getElementById(
+        "drawScore"
+    ).innerHTML = 0;
+
+    document.getElementById(
+        "difficulty"
+    ).value = "easy";
+
+    statusText.innerHTML =
+    "🚀 New Battle Started";
+
+    document.querySelector(
+        ".container"
+    ).animate(
+        [
+            {transform:"scale(0.9)"},
+            {transform:"scale(1.03)"},
+            {transform:"scale(1)"}
+        ],
+        {
+            duration:500
+        }
+    );
+}
+
+</script>
+
+</body>
+</html>
